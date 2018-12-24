@@ -342,3 +342,7 @@ form div label {
     font-weight: bold;
     margin-right: 15px;
 }
+
+form div input {
+    width: 100%;
+}

@@ -162,11 +162,6 @@ def delete_video(vid_id):
     return redirect('/video')
 
 
-class NewVideoForm(Form):
-    name = StringField('Title', [validators.data_required(), validators.Length(min=1, max=100)])
-    url = StringField('iframe', [validators.data_required(), validators.Length(min=1, max=500)])
-
-
 @app.route('/addVideo', methods=['GET'])
 @is_logged_in
 def add_video():
@@ -225,76 +220,30 @@ def delete_gig(gig_id):
     return redirect('/gigs')
 
 
+@app.route('/addGig', methods=['POST'])
+@is_logged_in
+def add_gig_for_real():  # TODO: Addd gig
+    title = request.form['title']
+    location= request.form['location']
+    date = request.form['date']
+    price = request.form['price']
+    link = request.form['link']
+    to_add = Gigs(title=title, location=location, date=date, price=price, link=link)
+    db.session.add(to_add)
+    db.session.commit()
+
+    return redirect('/gigs')
+
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html', contacts=contacts)
 
 
-@app.route('/photos')
+@app.route('/addGig', methods=['GET'])
 @is_logged_in
-def photos():
-    return render_template('photos.html')
-
-
-class NewPhotoForm(FlaskForm):
-    path = FileField('Photo', validators=[FileRequired()])
-
-
-@app.route('/addPhoto', methods=['GET', 'POST'])
-@is_logged_in
-def add_photo():
-    form = NewPhotoForm(request.form)
-    if request.method == 'POST' and form.validate_on_submit():
-        f = form.path.data
-        filename = secure_filename(f.filename)
-        f.save(os.path.join(
-            app.instance_path, 'static/images/gallery', filename
-        ))
-
-        cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO photos(path) VALUES(%s)', filename)
-        mysql.connection.commit()
-        mysql.connection.close()
-
-        return redirect('photos.html')
-    return render_template('addPhoto.html', form=form)
-
-
-class NewGigForm(Form):
-    title = StringField('Title', [validators.data_required(), validators.Length(min=1, max=250)])
-    location = StringField('Location', [validators.data_required(), validators.Length(min=1, max=250)])
-    date = DateField('Date', [validators.data_required()])
-    price = DecimalField('Price', [validators.data_required()])
-    link = StringField('Link', [validators.Length(min=0, max=250)])
-
-
-@app.route('/addGig', methods=['GET', 'POST'])
-@is_logged_in
-def add_gig():
-    form = NewGigForm(request.form)
-    if request.method == 'POST' and form.validate():
-        title = form.title.data
-        location = form.location.data
-        date = form.date.data
-        price = form.price.data
-        link = form.link.data
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Insert new user
-        cur.execute('INSERT INTO gigs(title, location, date, price, link) VALUES(%s, %s, %s, %s, %s)',
-                    [title, location, date, price, link])
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close connection
-        mysql.connection.close()
-
-        return redirect('/gigs')
-        return render_template('addGig.html', form=form)  # todo: replace this
-    return render_template('addGig.html', form=form)
+def add_gig():  # TODO: Addd gig
+    return render_template('addGig.html')
 
 
 class NewUserForm(Form):
@@ -306,6 +255,7 @@ class NewUserForm(Form):
     confirm = PasswordField('Confirm Password')
 
 
+# TODO: Get user routes on SQLAlchemy
 @app.route('/addUser', methods=['GET', 'POST'])
 @is_logged_in
 def add_user():
