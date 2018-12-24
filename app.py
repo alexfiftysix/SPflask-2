@@ -193,10 +193,8 @@ class Gigs(db.Model):
 @app.route('/gigs')
 def gigs():
     db.create_all()
-
-    # TODO: Sort by date
-    future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).all()
-    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).all()  # TODO: Don't allow super-old dates
+    future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).order_by(Gigs.date).all()
+    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).order_by(Gigs.date.desc()).all()  # TODO: Don't allow super-old dates
     size = len(future_gigs_data) + len(past_gigs_data)
 
     return render_template('gigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size)
