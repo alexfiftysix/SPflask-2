@@ -1,40 +1,22 @@
 ## TODO: Migrate to SQLAlchemy
 
-import os
-from flask import Flask, render_template, flash, redirect, url_for, session, logging, request, jsonify
+import config
+
+from flask import Flask, render_template, flash, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
 from data import gigs_list, contact_list
-from flask_mysqldb import MySQL
 import datetime
-
-from wtforms import Form, StringField, DecimalField, TextAreaField, PasswordField, validators, DateTimeField
-from wtforms.fields.html5 import DateField
-
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
-from werkzeug.utils import secure_filename
-import flask_wtf
-
 from passlib.hash import sha256_crypt
 from functools import wraps
-
 
 app = Flask(__name__)
 app.secret_key = 'secret123'
 
 # Config SQLalchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/StreetPiecesClean'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://' + config.config['db_username'] + ':' + config.config[
+    'db_password'] + '@localhost/StreetPiecesClean'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
-# Config mySQL (flask-mysql)
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'  # TODO: hide this somehow?
-app.config['MYSQL_DB'] = 'StreetPiecesClean'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'  # return from DB as dictionary
-# Init mySQL
-mysql = MySQL(app)
 
 gig_list = gigs_list()
 contacts = contact_list()
@@ -225,7 +207,7 @@ def delete_gig(gig_id):
 @is_logged_in
 def add_gig_for_real():  # TODO: Addd gig
     title = request.form['title']
-    location= request.form['location']
+    location = request.form['location']
     date = request.form['date']
     price = request.form['price']
     link = request.form['link']
@@ -247,78 +229,55 @@ def add_gig():  # TODO: Addd gig
     return render_template('addGig.html')
 
 
-class NewUserForm(Form):
-    username = StringField('Username', [validators.Length(min=1, max=250)])
-    password = PasswordField('Password', [
-        validators.data_required(),
-        validators.Length(min=8, max=250)
-    ])
-    confirm = PasswordField('Confirm Password')
+class Users(db.Model):
+    username = db.Column(db.String(250), primary_key=True)
+    password = db.Column(db.String(250), unique=False, nullable=False)
 
 
 # TODO: Get user routes on SQLAlchemy
-@app.route('/addUser', methods=['GET', 'POST'])
+@app.route('/addUser', methods=['GET'])
 @is_logged_in
 def add_user():
-    form = NewUserForm(request.form)
-    if request.method == 'POST' and form.validate():
-        username = form.username.data
-        password = sha256_crypt.encrypt(str(form.password.data))
+    return render_template('addUser.html')
 
-        # Create Cursor
-        cur = mysql.connection.cursor()
 
-        # Insert new user
-        cur.execute('INSERT INTO users(username, password) VALUES(%s, %s)', (username, password))
+@app.route('/addUser', methods=['POST'])
+@is_logged_in
+def add_user_to_db():
+    username = request.form['username']
+    password = sha256_crypt.encrypt(request.form['password'])
+    to_add = Users(username=username, password=password)
+    db.session.add(to_add)
+    db.session.commit()
 
-        # Commit to DB
-        mysql.connection.commit()
+    flash('You are now registered and can log in as <' + username + '>', 'success')
 
-        # Close connection
-        mysql.connection.close()
+    return redirect('/')
 
-        flash('You are now registered and can log in', 'success')
 
-        return redirect(url_for('/music'))
-    return render_template('addUser.html', form=form)
+@app.route('/login', methods=['GET'])
+def login():
+    return render_template('login.html')
 
 
 # User login
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        # Get form fields
-        # not using wtForms
-        username = request.form['username']
-        password_candidate = request.form['password']
+@app.route('/login', methods=['POST'])
+def login_submit():
+    username = request.form['username']
+    password_candidate = request.form['password']
 
-        cur = mysql.connection.cursor()
-        result = cur.execute('SELECT * FROM users WHERE username = %s', [username])
+    user = Users.query.filter_by(username=username).first()
+    if user is None:
+        app.logger.info('User does not exist')
+        return redirect('/')
+    if sha256_crypt.verify(password_candidate, user.password):
+        session['logged_in'] = True
+        session['username'] = username
 
-        if result > 0:
-            # Get stored hash
-            data = cur.fetchone()
-            password = data['password']
-
-            # Compare passwords
-            if sha256_crypt.verify(password_candidate, password):
-                # Passed
-
-                session['logged_in'] = True
-                session['username'] = username
-
-                return redirect('/')
-            else:
-                app.logger.info('PASSWORD INCORRECT')
-                error = 'Username or password incorrect'
-                return render_template('login.html', error=error)
-
-        else:
-            error = 'Username or password incorrect'
-            app.logger.info('NO USER')
-            return render_template('login.html', error=error)
-
-    return render_template('login.html')
+        return redirect('/')
+    else:
+        app.logger.info('Password wrong')
+        return redirect('/')
 
 
 @app.route('/logout')
@@ -334,6 +293,7 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
+    # TODO: Why this session_type business?
     app.config['SESSION_TYPE'] = 'filesystem'
 
     app.run(debug=True)
