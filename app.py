@@ -185,52 +185,43 @@ def add_video_for_real():
     return redirect('/video')
 
 
+class Gigs(db.Model):
+    __tablename__ = 'gigs'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), unique=False, nullable=False)
+    location = db.Column(db.String(250), unique=False, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    link = db.Column(db.String(2000), nullable=True)
+
+
 @app.route('/gigs')
 def gigs():
-    cur = mysql.connection.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS gigs (
-                title varchar(250), 
-                location varchar(250), 
-                date DATETIME, 
-                price int, 
-                link varchar(2000)); """)
+    db.create_all()
 
-    future_gigs = cur.execute('SELECT * FROM gigs WHERE DATE >= CURDATE()')
-    future_gigs_data = sorted(cur.fetchall(), key=lambda k: k['date'])
+    # TODO: Sort by date
+    future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).all()
+    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).all()  # TODO: Don't allow super-old dates
+    size = len(future_gigs_data) + len(past_gigs_data)
 
-    past_gigs = cur.execute('SELECT * FROM gigs WHERE DATE >= CURDATE() - INTERVAL 1 WEEK AND DATE < CURDATE()')
-    past_gigs_data = sorted(cur.fetchall(), key=lambda k: k['date'])
-
-    gigs_num = future_gigs + past_gigs
-
-    return render_template('gigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=gigs_num)
-    # TODO: Work out what to do if no gigs
-    # Close connection
+    return render_template('gigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size)
 
 
 @app.route('/deleteGigs')
 @is_logged_in
 def delete_gigs():
-    cur = mysql.connection.cursor()
-
-    result = cur.execute('SELECT * FROM gigs WHERE DATE >= CURDATE() - INTERVAL 1 WEEK')
-
-    future_gigs = cur.execute('SELECT * FROM gigs WHERE DATE >= CURDATE()')
-    future_gigs_data = sorted(cur.fetchall(), key=lambda k: k['date'])
-
-    past_gigs = cur.execute('SELECT * FROM gigs WHERE DATE >= CURDATE() - INTERVAL 1 WEEK AND DATE < CURDATE()')
-    past_gigs_data = sorted(cur.fetchall(), key=lambda k: k['date'])
-
+    future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).all()
+    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).all()  # TODO: Don't allow super-old dates
     return render_template('deleteGigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data)
 
 
 @app.route('/deleteGig/<gig_id>')
 @is_logged_in
 def delete_gig(gig_id):
-    print(gig_id)
-    cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM gigs WHERE id = %s", [gig_id])
-    mysql.connection.commit()
+    to_delete = Gigs.query.filter_by(id=gig_id).first()  # Can only be one, but don't want full object
+    db.session.delete(to_delete)
+    db.session.commit()
+
     return redirect('/gigs')
 
 
