@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{#    TODO: Confirmation message before delete  #}
+    <div class="main-wrapper">
+        {% include 'title.html' %}
+
+        <div class="gigs-wrapper">
+            {% for video in videos %}
+                <div class="gig">
+                    <div class="name">
+                        <h2 class="gig-name">{{ video.name}}</h2>
+                    </div>
+                    <div class="tix">
+                        <a class="gig-link" href="/deleteVideo/{{ video.id }}">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+        {% include 'socials.html' %}
+    </div>
+
+{% endblock %}

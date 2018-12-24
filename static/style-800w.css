@@ -1,0 +1,37 @@
+/* TODO: don't center align on small screens */
+
+body {
+    padding: 10px;
+}
+
+main {
+    height: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.big-screen-arrow-box {
+    display: none;
+}
+
+.small-screen-arrow-box {
+    display: flex;
+}
+
+nav {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+nav a {
+    justify-content: flex-start;
+}
+
+.small-screen-arrows {
+    display: flex;
+}
+
+.contacts-wrapper {
+    flex-direction: column;
+}

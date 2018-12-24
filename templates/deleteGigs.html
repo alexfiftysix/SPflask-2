@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{#    TODO: Confirmation message before delete #}
+    <div class="main-wrapper">
+        {% include 'title.html' %}
+
+        <div class="gigs-wrapper">
+            {% for gig in old_gigs %}
+                <div class="gig">
+                    <div class="name">
+                        <h2 class="gig-name">{{ gig.title }}</h2>
+                        <h3 class="gig-location">{{ gig.location }}</h3>
+                        <p class="gig-date">{{ gig.date }}</p>
+                    </div>
+                    <div class="tix">
+                        <p class="gig-price">{{ gig.price }}</p>
+                        <a class="gig-link" href="/deleteGig/{{ gig.id }}">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% for gig in gigs %}
+                <div class="gig">
+                    <div class="name">
+                        <h2 class="gig-name">{{ gig.title }}</h2>
+                        <h3 class="gig-location">{{ gig.location }}</h3>
+                        <p class="gig-date">{{ gig.date }}</p>
+                    </div>
+                    <div class="tix">
+                        <p class="gig-price">{{ gig.price }}</p>
+                        <a class="gig-link" href="/deleteGig/{{ gig.id }}">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+        {% include 'socials.html' %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="main-wrapper">
+        {% include 'title.html' %}
+        <div class="gigs-wrapper">
+            <h2>Wanna add some music?</h2>
+            {% from 'includes/_form_helpers.html' import render_field %}
+            <form method="post" action="">
+                <div class="form-group">
+                    {{ render_field(form.name, class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.iframe, class_="form-control") }}
+                </div>
+                <p class="info">Go to bandcamp, get the embed code, choose the big square one and check artwork only.</p>
+                <div class="form-group">
+                    {{ render_field(form.image, class_="form-control") }}
+                </div>
+                <input class="submit" type="submit" value="submit">
+            </form>
+        </div>
+        {% include 'socials.html' %}
+    </div>
+
+{% endblock %}

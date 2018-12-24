@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="main-wrapper">
+        {% include 'title.html' %}
+        <div class="gigs-wrapper">
+            <h2>Wanna add a video?</h2>
+            {% from 'includes/_form_helpers.html' import render_field %}
+            <form method="post" action="">
+                <div class="form-group">
+                    {{ render_field(form.name, class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.url, class_="form-control") }}
+                </div>
+                <p class="info">Go to Youtube, share, embed.</p>
+                <p class="info">Don't show suggested videos. Enable privacy-enhanced mode</p>
+                <input class="submit" type="submit" value="submit">
+            </form>
+        </div>
+        {% include 'socials.html' %}
+    </div>
+
+{% endblock %}

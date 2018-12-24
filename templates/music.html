@@ -1,0 +1,17 @@
+{% extends 'gallery.html' %}
+
+{% block gallery %}
+
+    <div id="music-wrapper">
+        {% for player in music_players %}
+            {{ player.iframe | safe }}
+        {% endfor %}
+    </div>
+
+    <script>
+        console.log("Heyy");
+        let data = {{ music_players | tojson }};
+    </script>
+    <script src="/static/music.js" rel="script"></script>
+{% endblock %}
+
