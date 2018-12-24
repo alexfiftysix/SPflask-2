@@ -5,6 +5,8 @@ from flask import Flask, render_template, flash, redirect, url_for, session, log
 from flask_sqlalchemy import SQLAlchemy
 from data import gigs_list, contact_list
 from flask_mysqldb import MySQL
+import datetime
+
 from wtforms import Form, StringField, DecimalField, TextAreaField, PasswordField, validators, DateTimeField
 from wtforms.fields.html5 import DateField
 
@@ -15,7 +17,7 @@ import flask_wtf
 
 from passlib.hash import sha256_crypt
 from functools import wraps
-import datetime
+
 
 app = Flask(__name__)
 app.secret_key = 'secret123'
@@ -194,9 +196,10 @@ class Gigs(db.Model):
 def gigs():
     db.create_all()
     future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).order_by(Gigs.date).all()
-    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).order_by(Gigs.date.desc()).all()  # TODO: Don't allow super-old dates
-    size = len(future_gigs_data) + len(past_gigs_data)
+    one_month_ago = datetime.date.today() - datetime.timedelta(days=28)
+    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).filter(Gigs.date > one_month_ago).all()
 
+    size = len(future_gigs_data) + len(past_gigs_data)
     return render_template('gigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size)
 
 
@@ -204,7 +207,7 @@ def gigs():
 @is_logged_in
 def delete_gigs():
     future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).all()
-    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).all()  # TODO: Don't allow super-old dates
+    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).order_by(Gigs.date.desc()).all()
     return render_template('deleteGigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data)
 
 
