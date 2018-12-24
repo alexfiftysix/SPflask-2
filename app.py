@@ -87,7 +87,7 @@ def music():
 @app.route('/deleteMusic/<music_id>')
 @is_logged_in
 def delete_music(music_id):
-    to_delete = Music.query.filter_by(id = music_id).first() # Can only be one, but don't want full object
+    to_delete = Music.query.filter_by(id=music_id).first()  # Can only be one, but don't want full object
     db.session.delete(to_delete)
     db.session.commit()
     return redirect('/music')
@@ -100,19 +100,10 @@ def delete_mus():
     return render_template('deleteMusic.html', music=data)
 
 
-class NewMusicForm(FlaskForm):
-    title = StringField('Title', [validators.data_required(), validators.Length(min=1, max=250)])
-    iframe = StringField('iframe', [validators.data_required(), validators.Length(min=1, max=500)])
-    image = FileField()
-
-
-# TODO: Make this file upload shit work
-
 @app.route('/addMusic')
 @is_logged_in
 def addMusicForm():
-    form = NewMusicForm(request.form)
-    return render_template('addMusic.html', form=form)
+    return render_template('addMusic.html')
 
 
 @app.route('/addMusic', methods=['POST'])
@@ -127,34 +118,47 @@ def addMusic():
     return redirect('/')
 
 
+class Videos(db.Model):
+    __tablename__ = 'videos'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), unique=True, nullable=False)
+    iframe = db.Column(db.String(2000), unique=True, nullable=False)
+
+
 @app.route('/video')
 def video():
-    '''
-    create table videos (name varchar(150), url varchar(2000));
-    '''
-    cur = mysql.connection.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS videos (name VARCHAR(150), url VARCHAR(2000))""")
-    # TODO: Add data if not exists
-    size = cur.execute('SELECT * FROM videos')
-    videos = cur.fetchall()
-    return render_template('video.html', videos=videos, size=size)
+    db.create_all()
+
+    data = Videos.query.all()
+    size = len(data)
+    if size == 0:
+        monster = Videos(title="Monster",
+                         iframe='<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/uL-RIv0HP3s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+        bkow = Videos(title="BKOW Lyric Video",
+                      iframe='<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/-NF9rxqJB8o" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+        db.session.add(monster)
+        db.session.add(bkow)
+        db.session.commit()
+        data = Videos.query.all()
+        size = len(data)
+
+    return render_template('video.html', videos=data, size=size)
 
 
 @app.route('/deleteVideo')
 @is_logged_in
 def delete_vid():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM videos')
-    data = cur.fetchall()
+    data = Videos.query.all()
     return render_template('deleteVideo.html', videos=data)
 
 
 @app.route('/deleteVideo/<vid_id>')
 @is_logged_in
 def delete_video(vid_id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM videos WHERE id = %s', vid_id)
-    mysql.connection.commit()
+    to_delete = Videos.query.filter_by(id=vid_id).first()  # Can only be one, but don't want full object
+    db.session.delete(to_delete)
+    db.session.commit()
+
     return redirect('/video')
 
 
@@ -163,28 +167,22 @@ class NewVideoForm(Form):
     url = StringField('iframe', [validators.data_required(), validators.Length(min=1, max=500)])
 
 
-@app.route('/addVideo', methods=['GET', 'POST'])
+@app.route('/addVideo', methods=['GET'])
 @is_logged_in
 def add_video():
-    form = NewVideoForm(request.form)
-    if request.method == 'POST' and form.validate():
-        name = form.name.data
-        url = form.url.data
+    return render_template('addVideo.html')
 
-        # Create Cursor
-        cur = mysql.connection.cursor()
 
-        # Insert new user
-        cur.execute('INSERT INTO videos(name, url) VALUES(%s, %s)', (name, url))
+@app.route('/addVideo', methods=['POST'])
+@is_logged_in
+def add_video_for_real():
+    title = request.form['title']
+    iframe = request.form['iframe']
+    to_add = Videos(title=title, iframe=iframe)
+    db.session.add(to_add)
+    db.session.commit()
 
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close connection
-        mysql.connection.close()
-
-        return redirect('/video')
-    return render_template('addVideo.html', form=form)
+    return redirect('/video')
 
 
 @app.route('/gigs')
