@@ -1,5 +1,8 @@
+## TODO: Migrate to SQLAlchemy
+
 import os
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from data import gigs_list, contact_list
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, DecimalField, TextAreaField, PasswordField, validators, DateTimeField
@@ -17,10 +20,15 @@ import datetime
 app = Flask(__name__)
 app.secret_key = 'secret123'
 
-# Config mySQL
+# Config SQLalchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/StreetPiecesClean'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# Config mySQL (flask-mysql)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password' # TODO: hide this somehow?
+app.config['MYSQL_PASSWORD'] = 'password'  # TODO: hide this somehow?
 app.config['MYSQL_DB'] = 'StreetPiecesClean'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'  # return from DB as dictionary
 # Init mySQL
@@ -46,76 +54,77 @@ def is_logged_in(f):
     return wrap
 
 
+class Music(db.Model):
+    __tablename__ = 'music'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), unique=True, nullable=False)
+    iframe = db.Column(db.String(2000), unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<Title: %r>' % self.title
+
+
 @app.route('/')
 @app.route('/music')
 def music():
-    '''
-    music table contains:
-        title varchar(200)      [name of the music]
-        iframe varchar(2000)    [iframe containing bandcamp embed]
-    :return:
-    '''
-    cur = mysql.connection.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS music (title VARCHAR(200), iframe VARCHAR(2000))""")
-    # TODO: Add in some data if not exists
-    size = cur.execute('SELECT * FROM music')
-    data = cur.fetchall()
+    db.create_all()
+    data = Music.query.all()
+    size = len(data)
+    if size == 0:
+        eyew = Music(title="Everything You Ever Wanted",
+                     iframe='<iframe style="border: 0; width: 350px; height: 350px;" src="https://bandcamp.com/EmbeddedPlayer/album=77046358/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless><a href="http://streetpieces.bandcamp.com/album/everything-you-ever-wanted">Everything You Ever Wanted by Street Pieces</a></iframe>')
+        other_side = Music(title="The Other Side",
+                           iframe='<iframe style="border: 0; width: 350px; height: 350px;" src="https://bandcamp.com/EmbeddedPlayer/album=934170608/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless><a href="http://streetpieces.bandcamp.com/album/the-other-side">The Other Side by Street Pieces</a></iframe>')
+        db.session.add(eyew)
+        db.session.add(other_side)
+        db.session.commit()
+        data = Music.query.all()
+        size = len(data)
     return render_template('music.html', music_players=data, size=size)
 
 
+# TODO: use a DELETE request instead of this thing
 @app.route('/deleteMusic/<music_id>')
 @is_logged_in
 def delete_music(music_id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM music WHERE id = %s', music_id)
-    mysql.connection.commit()
+    to_delete = Music.query.filter_by(id = music_id).first() # Can only be one, but don't want full object
+    db.session.delete(to_delete)
+    db.session.commit()
     return redirect('/music')
 
 
 @app.route('/deleteMusic')
 @is_logged_in
 def delete_mus():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM music')
-    data = cur.fetchall()
+    data = Music.query.all()
     return render_template('deleteMusic.html', music=data)
 
 
 class NewMusicForm(FlaskForm):
-    name = StringField('Title', [validators.data_required(), validators.Length(min=1, max=250)])
+    title = StringField('Title', [validators.data_required(), validators.Length(min=1, max=250)])
     iframe = StringField('iframe', [validators.data_required(), validators.Length(min=1, max=500)])
     image = FileField()
 
 
 # TODO: Make this file upload shit work
-@app.route('/addMusic', methods=['GET', 'POST'])
+
+@app.route('/addMusic')
+@is_logged_in
+def addMusicForm():
+    form = NewMusicForm(request.form)
+    return render_template('addMusic.html', form=form)
+
+
+@app.route('/addMusic', methods=['POST'])
 @is_logged_in
 def addMusic():
-    form = NewMusicForm(request.form)
-    if request.method == 'POST' and form.validate_on_submit():
-        name = form.name.data
-        iframe = form.iframe.data
-        image = form.image.data
-        filename = secure_filename(image.filename)
-        image.save(os.path.join(
-            app.instance_path, 'photos', filename
-        ))
+    title = request.form['title']
+    iframe = request.form['iframe']
+    to_add = Music(title=title, iframe=iframe)
+    db.session.add(to_add)
+    db.session.commit()
 
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Insert new user
-        cur.execute('INSERT INTO music(name, iframe, image) VALUES(%s, %s, %s)',
-                    (name, iframe, image))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        # Close connection
-        mysql.connection.close()
-
-        return redirect('/')
-    return render_template('addMusic.html', form=form)
+    return redirect('/')
 
 
 @app.route('/video')
