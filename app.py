@@ -1,6 +1,4 @@
-## TODO: Migrate to SQLAlchemy
-
-import config
+from excluded.config import config
 
 from flask import Flask, render_template, flash, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
@@ -13,8 +11,11 @@ app = Flask(__name__)
 app.secret_key = 'secret123'
 
 # Config SQLalchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://' + config.config['db_username'] + ':' + config.config[
-    'db_password'] + '@localhost/StreetPiecesClean'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://' + \
+                                        config['db_username'] + ':' + \
+                                        config['db_password'] + '@' + \
+                                        config['db_host'] + '/' + \
+                                        config['db_name']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 

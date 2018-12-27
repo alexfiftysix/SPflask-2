@@ -39,9 +39,9 @@ function changePlayer(direction) {
     bandcamp_players[current_player].classList.remove('hide');
 
     // change bg
-    if (data[current_player]['image']) {
-        document.getElementById('body').style.backgroundImage = 'url(' + data[current_player]['image'] + ')';
-    }
+    // if (data[current_player]['image']) {
+    //     document.getElementById('body').style.backgroundImage = 'url(' + data[current_player]['image'] + ')';
+    // }
 }
 
 /**
