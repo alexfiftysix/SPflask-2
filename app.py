@@ -2,7 +2,7 @@ from excluded.config import config
 
 from flask import Flask, render_template, flash, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
-from data import gigs_list, contact_list
+from data import contact_list
 import datetime
 from passlib.hash import sha256_crypt
 from functools import wraps
@@ -11,15 +11,21 @@ app = Flask(__name__)
 app.secret_key = 'secret123'
 
 # Config SQLalchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://' + \
-                                        config['db_username'] + ':' + \
-                                        config['db_password'] + '@' + \
-                                        config['db_host'] + '/' + \
-                                        config['db_name']
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://' + \
+#                                         config['db_username'] + ':' + \
+#                                         config['db_password'] + '@' + \
+#                                         config['db_host'] + '/' + \
+#                                         config['db_name']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://{username}:{password}@{host}/{db_name}'.format(
+    username=config['db_username'],
+    password=config['db_password'],
+    host=config['db_host'],
+    db_name=config['db_name']
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 380
 db = SQLAlchemy(app)
 
-gig_list = gigs_list()
 contacts = contact_list()
 
 
@@ -41,9 +47,9 @@ def is_logged_in(f):
 
 class Music(db.Model):
     __tablename__ = 'music'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), unique=True, nullable=False)
-    iframe = db.Column(db.String(2000), unique=True, nullable=False)
+    id = db.Column('id', db.Integer, primary_key=True)
+    title = db.Column('title', db.String(200), unique=True, nullable=False)
+    iframe = db.Column('iframe', db.String(2000), unique=True, nullable=False)
 
     def __repr__(self):
         return '<Title: %r>' % self.title
@@ -105,9 +111,9 @@ def addMusic():
 
 class Videos(db.Model):
     __tablename__ = 'videos'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), unique=True, nullable=False)
-    iframe = db.Column(db.String(2000), unique=True, nullable=False)
+    id = db.Column('id', db.Integer, primary_key=True)
+    title = db.Column('title', db.String(150), unique=True, nullable=False)
+    iframe = db.Column('iframe', db.String(2000), unique=True, nullable=False)
 
 
 @app.route('/video')
@@ -167,12 +173,12 @@ def add_video_for_real():
 
 class Gigs(db.Model):
     __tablename__ = 'gigs'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(250), unique=False, nullable=False)
-    location = db.Column(db.String(250), unique=False, nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    link = db.Column(db.String(2000), nullable=True)
+    id = db.Column('id', db.Integer, primary_key=True)
+    title = db.Column('title', db.String(250), unique=False, nullable=False)
+    location = db.Column('location', db.String(250), unique=False, nullable=False)
+    date = db.Column('date', db.Date, nullable=False)
+    price = db.Column('price', db.Integer, nullable=False)
+    link = db.Column('link', db.String(2000), nullable=True)
 
 
 @app.route('/gigs')
@@ -231,8 +237,8 @@ def add_gig():  # TODO: Addd gig
 
 
 class Users(db.Model):
-    username = db.Column(db.String(250), primary_key=True)
-    password = db.Column(db.String(250), unique=False, nullable=False)
+    username = db.Column('username', db.String(50), primary_key=True)
+    password = db.Column('password', db.String(250), unique=False, nullable=False)
 
 
 # TODO: Get user routes on SQLAlchemy
