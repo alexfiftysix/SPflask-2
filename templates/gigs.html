@@ -11,7 +11,7 @@
                     <div class="name">
                         <h2 class="gig-name">{{ gig.title }}</h2>
                         <h3 class="gig-location">{{ gig.location }}</h3>
-                        <p class="gig-date">{{ gig.date }}</p>
+                        <p class="gig-date">{{ gig.date.strftime('%-d-%B-%y').replace('-', ' ') }}</p>
                     </div>
                     <div class="tix">
                         <p class="gig-price">${{ gig.price }}</p>
@@ -27,7 +27,7 @@
                     <div class="name">
                         <h2 class="gig-name">{{ gig.title }}</h2>
                         <h3 class="gig-location">{{ gig.location }}</h3>
-                        <p class="gig-date">{{ gig.date }}</p>
+                        <p class="gig-date">{{ gig.date.strftime('%-d-%B-%y').replace('-', ' ') }}</p>
                     </div>
                     <div class="tix">
                         <p class="gig-price">${{ gig.price }}</p>

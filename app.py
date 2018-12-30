@@ -47,9 +47,9 @@ def is_logged_in(f):
 
 class Music(db.Model):
     __tablename__ = 'music'
-    id = db.Column('id', db.Integer, primary_key=True)
+    id = db.Column('id', db.SmallInteger, primary_key=True)
     title = db.Column('title', db.String(200), unique=True, nullable=False)
-    iframe = db.Column('iframe', db.String(2000), unique=True, nullable=False)
+    iframe = db.Column('iframe', db.String(2000), nullable=False)
 
     def __repr__(self):
         return '<Title: %r>' % self.title
@@ -111,9 +111,9 @@ def addMusic():
 
 class Videos(db.Model):
     __tablename__ = 'videos'
-    id = db.Column('id', db.Integer, primary_key=True)
+    id = db.Column('id', db.SmallInteger, primary_key=True)
     title = db.Column('title', db.String(150), unique=True, nullable=False)
-    iframe = db.Column('iframe', db.String(2000), unique=True, nullable=False)
+    iframe = db.Column('iframe', db.String(2000), nullable=False)
 
 
 @app.route('/video')
@@ -173,11 +173,11 @@ def add_video_for_real():
 
 class Gigs(db.Model):
     __tablename__ = 'gigs'
-    id = db.Column('id', db.Integer, primary_key=True)
+    id = db.Column('id', db.SmallInteger, primary_key=True)
     title = db.Column('title', db.String(250), unique=False, nullable=False)
     location = db.Column('location', db.String(250), unique=False, nullable=False)
     date = db.Column('date', db.Date, nullable=False)
-    price = db.Column('price', db.Integer, nullable=False)
+    price = db.Column('price', db.DECIMAL(10, 2), nullable=False)
     link = db.Column('link', db.String(2000), nullable=True)
 
 
