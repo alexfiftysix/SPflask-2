@@ -9,13 +9,13 @@
             <form method="post">
                 <div>
                     <label>Title:</label>
-                    <input type="text" name="title">
+                    <input type="text" name="title" required maxlength="200">
                 </div>
                 <div>
                     <label>iframe:</label>
-                    <input type="text" name="iframe">
+                    <input type="text" name="iframe" required maxlength="2000">
                 </div>
-                <p class="info">For iFrame: Go to bandcamp, get the embed code, choose the big square one and check artwork only.</p>
+                <p class="info">For iFrame: Go to <a href="https://streetpieces.bandcamp.com/">bandcamp</a>, get the embed code, choose the big square one and check artwork only.</p>
                 <input class="submit" type="submit" value="submit">
             </form>
         </div>

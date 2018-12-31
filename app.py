@@ -8,14 +8,9 @@ from passlib.hash import sha256_crypt
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'secret123'
+app.secret_key = config['secret']
 
 # Config SQLalchemy
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://' + \
-#                                         config['db_username'] + ':' + \
-#                                         config['db_password'] + '@' + \
-#                                         config['db_host'] + '/' + \
-#                                         config['db_name']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://{username}:{password}@{host}/{db_name}'.format(
     username=config['db_username'],
     password=config['db_password'],
@@ -24,14 +19,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://{username}:{password}@{
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 380
+app.permanent_session_lifetime = datetime.timedelta(minutes=15)
 db = SQLAlchemy(app)
 
 contacts = contact_list()
 
-
+# TODO: Allow re-ordering of videos/music
+# TODO: Allow touch/swipe control on mobile to change music/video
 # TODO: Work out file upload (For bg photos for music)
 # TODO: Generalize delete routes, video+music routes
-# TODO: Make sessions expire after 1 hour or so
 
 # check if user logged in
 def is_logged_in(f):
@@ -102,9 +98,17 @@ def addMusicForm():
 def addMusic():
     title = request.form['title']
     iframe = request.form['iframe']
-    to_add = Music(title=title, iframe=iframe)
-    db.session.add(to_add)
-    db.session.commit()
+
+    if 'streetpieces.bandcamp.com/' not in iframe or '<iframe' not in iframe:
+        flash("make sure you've got the right iframe - has to be from bandcamp")
+    elif len(title) > 200:
+        flash('song title is too long. Must be <= 200 chars')
+    elif len(iframe) > 2000:
+        flash('iframe text is too long. Talk to the devs')
+    else:
+        to_add = Music(title=title, iframe=iframe)
+        db.session.add(to_add)
+        db.session.commit()
 
     return redirect('/')
 
@@ -164,9 +168,19 @@ def add_video():
 def add_video_for_real():
     title = request.form['title']
     iframe = request.form['iframe']
-    to_add = Videos(title=title, iframe=iframe)
-    db.session.add(to_add)
-    db.session.commit()
+
+    if '<iframe' not in iframe:
+        flash("That's not an iframe")
+    elif 'youtube' not in iframe:
+        flash("That's not from youtube")
+    elif len(iframe) > 2000:
+        flash("iframe too long")
+    elif len(title) > 150:
+        flash("Title must be <= 150 chars")
+    else:
+        to_add = Videos(title=title, iframe=iframe)
+        db.session.add(to_add)
+        db.session.commit()
 
     return redirect('/video')
 
