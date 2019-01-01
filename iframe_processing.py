@@ -1,3 +1,5 @@
+# TODO: Some unit testing for these guys
+
 def valid_bandcamp(iframe):
     """
     returns true if bandcamp link is acceptable
@@ -22,4 +24,22 @@ def valid_bandcamp(iframe):
         return False
 
     # We made it
+    return True
+
+
+def valid_youtube(iframe):
+    """
+    Returns True if iframe is a valid youtube embed
+    :param iframe:
+    :return:
+    """
+    # TODO: Work out how to validate that it's a streetpieces video
+
+    splitty = iframe.split(' ')
+
+    if splitty[0] != '<iframe':
+        return False
+    elif splitty[3].find('src="https://www.youtube') != 0:
+        return False
+
     return True

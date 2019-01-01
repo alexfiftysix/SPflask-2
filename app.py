@@ -170,7 +170,7 @@ def add_video():
 def add_video_for_real():
     title = request.form['title']
     iframe = request.form['iframe']
-
+    # TODO: Validate better
     if '<iframe' not in iframe:
         flash("That's not an iframe")
     elif 'youtube' not in iframe:
