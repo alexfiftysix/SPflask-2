@@ -4,6 +4,7 @@
 # TODO: Generalize delete routes, video+music routes
 
 from excluded.config import config
+from iframe_processing import valid_bandcamp
 
 from flask import Flask, render_template, flash, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
@@ -100,8 +101,8 @@ def addMusic():
     title = request.form['title']
     iframe = request.form['iframe']
 
-    if 'streetpieces.bandcamp.com/' not in iframe or '<iframe' not in iframe:
-        flash("make sure you've got the right iframe - has to be from bandcamp")
+    if not valid_bandcamp(iframe):
+        flash("make sure you've got the right iframe - has to be from street pieces bandcamp")
     elif len(title) > 200:
         flash('song title is too long. Must be <= 200 chars')
     elif len(iframe) > 2000:
