@@ -1,3 +1,8 @@
+# TODO: Allow re-ordering of videos/music
+# TODO: Allow touch/swipe control on mobile to change music/video
+# TODO: Work out file upload (For bg photos for music)
+# TODO: Generalize delete routes, video+music routes
+
 from excluded.config import config
 
 from flask import Flask, render_template, flash, redirect, session, request
@@ -24,10 +29,6 @@ db = SQLAlchemy(app)
 
 contacts = contact_list()
 
-# TODO: Allow re-ordering of videos/music
-# TODO: Allow touch/swipe control on mobile to change music/video
-# TODO: Work out file upload (For bg photos for music)
-# TODO: Generalize delete routes, video+music routes
 
 # check if user logged in
 def is_logged_in(f):
