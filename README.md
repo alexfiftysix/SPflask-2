@@ -23,11 +23,7 @@ Change over to PostgreSQL instead of mySQL for kicks
 
 Improve validation. The website is only intended to have about 4 users with access to the log-in area, but better safe than sorry.
 
-## To Run ##
+## To Run locally ##
 $ export FLASK_APP=app.py <br> 
 $ export FLASK_DEBUG=1  // If you want debug mode <br>
 $ flask run <br>
-
-
-#### MySQL stuff you keep forgetting
-mysql -u USERNAME -p
