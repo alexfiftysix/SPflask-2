@@ -21,6 +21,7 @@ Use some kind of magic to change the bg-colour dynamically based on the colour o
 
 Change over to PostgreSQL instead of mySQL for kicks
 
+Improve validation. The website is only intended to have about 4 users with access to the log-in area, but better safe than sorry.
 
 ## To Run ##
 $ export FLASK_APP=app.py <br> 
