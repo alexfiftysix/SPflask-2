@@ -1,32 +1,46 @@
 {% include 'head.html' %}
 
 <body>
-<div class="title-wrapper">
-    <p>S</p>
-    <p>T</p>
-    <p>R</p>
-    <p>E</p>
-    <p>E</p>
-    <p>T</p>
-    <p> </p>
-    <p>P</p>
-    <p>I</p>
-    <p>E</p>
-    <p>C</p>
-    <p>E</p>
-    <p>S</p>
+<div class="mobile-main">
+
+    <div class="page">
+        <div class="ultrawide-title-wrapper">
+            <p>S</p>
+            <p>T</p>
+            <p>R</p>
+            <p>E</p>
+            <p>E</p>
+            <p>T</p>
+            <p></p>
+            <p>P</p>
+            <p>I</p>
+            <p>E</p>
+            <p>C</p>
+            <p>E</p>
+            <p>S</p>
+        </div>
+
+
+        <a class="img_wrapper" href="https://streetpieces.bandcamp.com/album/everything-you-ever-wanted"><img
+                class='mobile_image' src="/static/images/EYEW.jpg"></a>
+
+    </div>
+
+
+    <div class="page">
+        <h1>Listen</h1>
+        {% include 'listen-options.html' %}
+    </div>
+
+    <div class="page">
+        <h1>Gigs</h1>
+        {% include 'gigs-list.html' %}
+    </div>
+
+    <div class="page">
+        <h1>Follow Street Pieces</h1>
+        {% include 'socials.html' %}
+    </div>
 </div>
 
-
-<div class="listen-watch">
-    <a href="/listen">Listen</a> {# TODO: Should take to listen selections page #}
-    <a href="https://www.youtube.com/results?search_query=street+pieces+monster">Watch</a>
-</div>
-
-<a class="img_wrapper" href="https://streetpieces.bandcamp.com/album/everything-you-ever-wanted"><img
-        class='mobile_image' src="/static/images/EYEW.jpg"></a>
-
-{% include 'gigs-list.html' %}
-
-{% include 'socials.html' %}
 </body>
