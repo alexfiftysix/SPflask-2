@@ -23,7 +23,7 @@
 
 .listen-options-wrapper {
     width: 320px;
-    background-color: white;
+    background-color: #fcfcfc;
     padding: 0;
 }
 
@@ -93,7 +93,7 @@
     height: 22px;
 }
 
-.listen-options-wrapper .apple-music-logo {
+.listen-options-wrapper .apple-music-logo, .listen-options-wrapper .google-play-logo {
     height: 50px;
 }
 
