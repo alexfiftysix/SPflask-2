@@ -4,44 +4,7 @@
     <div class="main-wrapper">
         {% include 'title.html' %}
 
-        <div class="gigs-wrapper">
-
-            {% for gig in gigs %}
-                <div class="gig">
-                    <div class="name">
-                        <h2 class="gig-name">{{ gig.title }}</h2>
-                        <h3 class="gig-location">{{ gig.location }}</h3>
-                        <p class="gig-date">{{ gig.date.strftime('%-d-%B-%y').replace('-', ' ') }}</p>
-                    </div>
-                    <div class="tix">
-                        <p class="gig-price">${{ gig.price }}</p>
-                        {% if gig.link %}
-                        <a class="gig-link" href="{{ gig.link }}">Buy tickets</a>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-
-            {% for gig in old_gigs %}
-                <div class="gig old-gig">
-                    <div class="name">
-                        <h2 class="gig-name">{{ gig.title }}</h2>
-                        <h3 class="gig-location">{{ gig.location }}</h3>
-                        <p class="gig-date">{{ gig.date.strftime('%-d-%B-%y').replace('-', ' ') }}</p>
-                    </div>
-                    <div class="tix">
-                        <p class="gig-price">${{ gig.price }}</p>
-                        <a class="gig-link" href="{{ gig.link }}">Buy tickets</a>
-                    </div>
-                </div>
-            {% endfor %}
-
-            {% if gigs_num == 0 %}
-                <h2>No upcoming gigs found</h2>
-            {% endif %}
-
-        </div>
-
+        {% include 'gigs-list.html' %}
 
         {% include 'socials.html' %}
     </div>

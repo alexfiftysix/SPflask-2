@@ -16,12 +16,142 @@
     background-color: black;
 }
 
+.mobile_image {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.listen-options-wrapper {
+    width: 320px;
+    background-color: white;
+    padding: 0;
+}
+
+.listen-options-wrapper  {
+    padding: 0;
+    margin: 0;
+}
+
+.listen-options-wrapper li:last-child {
+    margin-bottom: 0;
+}
+
+.listen-options-wrapper li:first-child {
+    margin-top: 0;
+}
+
+.listen-options-wrapper li {
+    font-size: 20px;
+    list-style: none;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    height: 80px;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #c4c4c4;
+
+
+}
+
+.listen-options-wrapper li img {
+    height: 30px;
+}
+
+.listen-options-wrapper  li a {
+    background-color: white;
+    color: #3e3e3e;
+    border: 1px solid #3e3e3e;
+    font-weight: bolder;
+    padding: 20px;
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -ms-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+}
+
+.listen-options-wrapper .spotify-logo {
+    height: 40px;
+}
+
+.listen-options-wrapper .bandcamp-logo {
+    height: 22px;
+}
+
+.listen-options-wrapper .apple-music-logo {
+    height: 50px;
+}
+
+.listen-options-wrapper li a:hover {
+    background-color: #3e3e3e;
+    color: white;
+}
+
+.listen-watch {
+    display: flex;
+    justify-content: stretch;
+    width: 100%;
+    margin: 5px 0;
+}
+
+.listen-watch a {
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    border: 2px solid black;
+    transition: 0.2s;
+    -webkit-transition: 0.2s;
+    text-decoration: none;
+    font-weight: bolder;
+    padding: 4px;
+}
+
+.listen-watch a:hover {
+    background-color: black;
+    color: white;
+}
+
+.listen-watch a:visited {
+    color: black;
+}
+
+.listen-watch a:visited:hover {
+    color: white;
+}
+
+.title-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title-wrapper p {
+    font-size: 2em;
+    margin: 0;
+}
+
 body {
-    background-image: url("images/blurry_black_red.jpg");
-    background-size: unset;
-    background-color: #5e5151;
-    background-position: center;
-    background-attachment: fixed;
+    /*background-size: cover;*/
+    background: #5e5151 url("images/blurry_black_red.jpg") no-repeat center center fixed;
+
+    -webkit-background-size: cover;
+    -moz-background-size: 100% 100%;
+    -o-background-size: cover;
+    background-size: cover;
 
     margin: 0;
     padding: 0;
@@ -354,5 +484,5 @@ input::-webkit-outer-spin-button {
 }
 
 input[type='number'] {
-    -moz-appearance:textfield;
+    -moz-appearance: textfield;
 }

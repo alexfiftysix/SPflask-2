@@ -53,6 +53,22 @@ class Music(db.Model):
         return '<Title: %r>' % self.title
 
 
+@app.route('/mobile')
+def mobile():
+    db.create_all()
+    future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).order_by(Gigs.date).all()
+    one_month_ago = datetime.date.today() - datetime.timedelta(days=28)
+    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).filter(Gigs.date > one_month_ago).all()
+
+    size = len(future_gigs_data) + len(past_gigs_data)
+
+    return render_template('mobile.html', mobile=True, gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size, contacts=contacts)
+
+@app.route('/listen')
+def listen():
+    return render_template('listen.html')
+
+
 @app.route('/')
 @app.route('/music')
 def music():

@@ -1,0 +1,8 @@
+<div class="contacts-wrapper">
+    {% for contact in contacts %}
+        <div class="contact-detail">
+            <h2>{{ contact.title }}</h2>
+            <h3>{{ contact.value }}</h3>
+        </div>
+    {% endfor %}
+</div>
