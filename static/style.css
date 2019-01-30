@@ -1,4 +1,4 @@
-/* TODO: change colours to variables */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:900'); /* TODO: change colours to variables */
 /* TODO: Consider sizing for very big screns - Eg 1200x1920 */
 * {
     -webkit-box-sizing: border-box;
@@ -16,20 +16,77 @@
     background-color: black;
 }
 
-.mobile_image {
+.mobile-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-image-wrapper p {
+    position: absolute;
+    color: white;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3em;
+    font-weight: bolder;
+}
+
+.mobile-image {
     width: 100%;
     margin-bottom: 20px;
+    box-shadow: 0 0 15px black;
+}
+
+footer {
+    width: 100%;
+    bottom: 0;
+}
+
+.social-names {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 20px;
+}
+
+.social-names > a {
+    font-size: 2em;
+    margin-bottom: 1em;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.social-names > a:visited {
+    color: white;
 }
 
 .page {
     min-height: 100vh;
+    width: 100%;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    align-items: center;
+}
+
+.page:first-child > div:first-child {
+    transition: margin-bottom 2s;
+    margin-bottom: 10px;
 }
 
 .page > * {
     margin-bottom: 50px;
+    -webkit-transition: margin-bottom 2s;
+    -moz-transition: margin-bottom 2s;
+    -ms-transition: margin-bottom 2s;
+    -o-transition: margin-bottom 2s;
+    transition: margin-bottom 2s;
 }
 
 .mobile-main {
@@ -71,14 +128,24 @@
 }
 
 .ultrawide-title-wrapper {
+    width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
 .ultrawide-title-wrapper p {
     font-size: 2em;
+    font-weight: bold;
+    text-shadow: rgba(255, 255, 255, 0.5) 0 0 10px;
     margin: 0;
+}
 
+.mobile-title {
+    width: 100%;
+    font-size: 2em;
+    font-weight: bold;
+    text-shadow: rgba(255, 255, 255, 0.5) 0 0 10px;
+    text-align: right;
 }
 
 body {
@@ -198,6 +265,7 @@ h1 {
 h1 a {
     margin: 0 -10px 0 0;
     text-decoration: none;
+    text-align: right;
     cursor: default;
     transition: 250ms;
 }
@@ -217,7 +285,7 @@ h1 a:hover {
 
     display: flex;
     justify-content: left;
-    align-items: left;
+    align-items: center;
 }
 
 .icons a img {

@@ -1,12 +1,10 @@
-.listen-options-wrapper {
+.listen-options-wrapper  {
     width: 320px;
     background-color: #fcfcfc;
-    padding: 0;
-}
 
-.listen-options-wrapper  {
     padding: 0;
     margin: 0;
+    box-shadow: 0 0 15px black;
 }
 
 .listen-options-wrapper li:last-child {

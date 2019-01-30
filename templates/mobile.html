@@ -11,7 +11,8 @@
             <p>E</p>
             <p>E</p>
             <p>T</p>
-            <p></p>
+        </div>
+        <div class="ultrawide-title-wrapper">
             <p>P</p>
             <p>I</p>
             <p>E</p>
@@ -21,26 +22,39 @@
         </div>
 
 
-        <a class="img_wrapper" href="https://streetpieces.bandcamp.com/album/everything-you-ever-wanted"><img
-                class='mobile_image' src="/static/images/EYEW.jpg"></a>
+        <a class="mobile-image-wrapper" href="https://streetpieces.bandcamp.com/album/everything-you-ever-wanted">
+            <p>Out Now</p>
+            <img class='mobile-image' src="/static/images/EYEW.jpg">
+        </a>
 
     </div>
 
 
     <div class="page">
-        <h1>Listen</h1>
+        <h1 class="mobile-title">Listen</h1>
         {% include 'listen-options.html' %}
     </div>
 
-    <div class="page">
-        <h1>Gigs</h1>
-        {% include 'gigs-list.html' %}
-    </div>
+    {% if gigs_num > 0 %}
+        <div class="page">
+            <h1 class="mobile-title">Gigs</h1>
+            {% include 'gigs-list.html' %}
+        </div>
+    {% endif %}
 
     <div class="page">
-        <h1>Follow Street Pieces</h1>
-        {% include 'socials.html' %}
+        <h1 class="mobile-title">Follow</h1>
+        <div class="social-names">
+            <a href="https://www.facebook.com/streetpieces/">Facebook</a>
+            <a href="https://www.instagram.com/streetpieces/">Instagram</a>
+            <a href="https://open.spotify.com/artist/6A7pzeOZUxq2EqjEoT29dn">Spotify</a>
+            <a href="https://streetpieces.bandcamp.com/">Bandcamp</a>
+        </div>
     </div>
+
+
 </div>
-
+<footer>
+    {% include 'socials.html' %}
+</footer>
 </body>

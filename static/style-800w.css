@@ -36,3 +36,6 @@ nav a {
     flex-direction: column;
 }
 
+body {
+    background-image: url("images/blurry_black_red_mobile.jpg");
+}
