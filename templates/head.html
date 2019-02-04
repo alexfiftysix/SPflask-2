@@ -5,4 +5,13 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <link rel="stylesheet" type="text/css" href="/static/style-800w.css" media="(max-width: 800px)">
     <link rel="stylesheet" type="text/css" href="/static/style-600h.css" media="(max-height: 600px)">
+
+    <script type="text/javascript">
+        if (screen.width <= 800 && window.location.href.search('mobile') === -1) {
+            if (typeof location.origin === 'undefined') {
+                location.origin = location.protocol + '//' + location.host;
+            }
+            window.location.replace(location.origin + '/mobile');
+        }
+    </script>
 </head>
