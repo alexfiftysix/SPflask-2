@@ -1,7 +1,8 @@
 # TODO: Allow re-ordering of videos/music
-# TODO: Allow touch/swipe control on mobile to change music/video
 # TODO: Work out file upload (For bg photos for music)
 # TODO: Generalize delete routes, video+music routes
+# TODO: Don't actually have page by page navigation. Have the one page include all info, but info is hidden/shown based on menu, or scrolls down based on menu selection. Then mobile version will not need to be seperate
+
 
 from excluded.config import config
 from iframe_processing import valid_bandcamp
@@ -62,7 +63,9 @@ def mobile():
 
     size = len(future_gigs_data) + len(past_gigs_data)
 
-    return render_template('mobile.html', mobile=True, gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size, contacts=contacts)
+    return render_template('mobile.html', mobile=True, gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size,
+                           contacts=contacts)
+
 
 @app.route('/listen')
 def listen():
