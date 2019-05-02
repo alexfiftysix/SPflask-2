@@ -267,7 +267,7 @@ def contact():
 
 @app.route('/addGig', methods=['GET'])
 @is_logged_in
-def add_gig():  # TODO: Addd gig
+def add_gig():  # TODO: Add gig
     return render_template('addGig.html')
 
 
@@ -277,24 +277,24 @@ class Users(db.Model):
 
 
 # TODO: Get user routes on SQLAlchemy
-@app.route('/addUser', methods=['GET'])
-@is_logged_in
-def add_user():
-    return render_template('addUser.html')
-
-
-@app.route('/addUser', methods=['POST'])
-@is_logged_in
-def add_user_to_db():
-    username = request.form['username']
-    password = sha256_crypt.encrypt(request.form['password'])
-    to_add = Users(username=username, password=password)
-    db.session.add(to_add)
-    db.session.commit()
-
-    flash('You are now registered and can log in as <' + username + '>', 'success')
-
-    return redirect('/')
+# @app.route('/addUser', methods=['GET'])
+# @is_logged_in
+# def add_user():
+#     return render_template('addUser.html')
+#
+#
+# @app.route('/addUser', methods=['POST'])
+# @is_logged_in
+# def add_user_to_db():
+#     username = request.form['username']
+#     password = sha256_crypt.encrypt(request.form['password'])
+#     to_add = Users(username=username, password=password)
+#     db.session.add(to_add)
+#     db.session.commit()
+#
+#     flash('You are now registered and can log in as <' + username + '>', 'success')
+#
+#     return redirect('/')
 
 
 @app.route('/login', methods=['GET'])
