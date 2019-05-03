@@ -1,7 +1,9 @@
 # TODO: Allow re-ordering of videos/music
 # TODO: Work out file upload (For bg photos for music)
 # TODO: Generalize delete routes, video+music routes
-# TODO: Don't actually have page by page navigation. Have the one page include all info, but info is hidden/shown based on menu, or scrolls down based on menu selection. Then mobile version will not need to be seperate
+# TODO: Don't actually have page by page navigation.
+#       Have the one page include all info, but info is hidden/shown based on menu,
+#       or scrolls down based on menu selection. Then mobile version will not need to be seperate
 
 
 from excluded.config import config
@@ -54,6 +56,7 @@ class Music(db.Model):
         return '<Title: %r>' % self.title
 
 
+@app.route('/')
 @app.route('/mobile')
 def mobile():
     db.create_all()
@@ -72,30 +75,6 @@ def mobile():
     return render_template('mobile.html', mobile=True, gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size,
                            contacts=contacts, music_count=music_count, music_data=music_data, video_data=video_data,
                            video_count=video_count)
-
-
-@app.route('/listen')
-def listen():
-    return render_template('listen.html')
-
-
-@app.route('/')
-@app.route('/music')
-def music():
-    db.create_all()
-    data = Music.query.all()
-    size = len(data)
-    if size == 0:
-        eyew = Music(title="Everything You Ever Wanted",
-                     iframe='<iframe style="border: 0; width: 350px; height: 350px;" src="https://bandcamp.com/EmbeddedPlayer/album=77046358/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless><a href="http://streetpieces.bandcamp.com/album/everything-you-ever-wanted">Everything You Ever Wanted by Street Pieces</a></iframe>')
-        other_side = Music(title="The Other Side",
-                           iframe='<iframe style="border: 0; width: 350px; height: 350px;" src="https://bandcamp.com/EmbeddedPlayer/album=934170608/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless><a href="http://streetpieces.bandcamp.com/album/the-other-side">The Other Side by Street Pieces</a></iframe>')
-        db.session.add(eyew)
-        db.session.add(other_side)
-        db.session.commit()
-        data = Music.query.all()
-        size = len(data)
-    return render_template('music.html', music_players=data, size=size)
 
 
 # TODO: use a DELETE request instead of this thing
@@ -146,26 +125,6 @@ class Videos(db.Model):
     id = db.Column('id', db.SmallInteger, primary_key=True)
     title = db.Column('title', db.String(150), unique=True, nullable=False)
     iframe = db.Column('iframe', db.String(2000), nullable=False)
-
-
-@app.route('/video')
-def video():
-    db.create_all()
-
-    data = Videos.query.all()
-    size = len(data)
-    if size == 0:
-        monster = Videos(title="Monster",
-                         iframe='<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/uL-RIv0HP3s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-        bkow = Videos(title="BKOW Lyric Video",
-                      iframe='<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/-NF9rxqJB8o" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-        db.session.add(monster)
-        db.session.add(bkow)
-        db.session.commit()
-        data = Videos.query.all()
-        size = len(data)
-
-    return render_template('video.html', videos=data, size=size)
 
 
 @app.route('/deleteVideo')
@@ -223,17 +182,6 @@ class Gigs(db.Model):
     link = db.Column('link', db.String(2000), nullable=True)
 
 
-@app.route('/gigs')
-def gigs():
-    db.create_all()
-    future_gigs_data = Gigs.query.filter(Gigs.date >= datetime.date.today()).order_by(Gigs.date).all()
-    one_month_ago = datetime.date.today() - datetime.timedelta(days=28)
-    past_gigs_data = Gigs.query.filter(Gigs.date < datetime.date.today()).filter(Gigs.date > one_month_ago).all()
-
-    size = len(future_gigs_data) + len(past_gigs_data)
-    return render_template('gigs.html', gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size)
-
-
 @app.route('/deleteGigs')
 @is_logged_in
 def delete_gigs():
@@ -267,11 +215,6 @@ def add_gig_for_real():  # TODO: Addd gig
     return redirect('/gigs')
 
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html', contacts=contacts)
-
-
 @app.route('/addGig', methods=['GET'])
 @is_logged_in
 def add_gig():  # TODO: Add gig
@@ -283,25 +226,7 @@ class Users(db.Model):
     password = db.Column('password', db.String(250), unique=False, nullable=False)
 
 
-# TODO: Get user routes on SQLAlchemy
-# @app.route('/addUser', methods=['GET'])
-# @is_logged_in
-# def add_user():
-#     return render_template('addUser.html')
-#
-#
-# @app.route('/addUser', methods=['POST'])
-# @is_logged_in
-# def add_user_to_db():
-#     username = request.form['username']
-#     password = sha256_crypt.encrypt(request.form['password'])
-#     to_add = Users(username=username, password=password)
-#     db.session.add(to_add)
-#     db.session.commit()
-#
-#     flash('You are now registered and can log in as <' + username + '>', 'success')
-#
-#     return redirect('/')
+# TODO: Email contact at website bottom
 
 
 @app.route('/login', methods=['GET'])
