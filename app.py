@@ -1,9 +1,6 @@
 # TODO: Allow re-ordering of videos/music
 # TODO: Work out file upload (For bg photos for music)
 # TODO: Generalize delete routes, video+music routes
-# TODO: Don't actually have page by page navigation.
-#       Have the one page include all info, but info is hidden/shown based on menu,
-#       or scrolls down based on menu selection. Then mobile version will not need to be seperate
 
 
 from excluded.config import config
@@ -202,7 +199,7 @@ def delete_gig(gig_id):
 
 @app.route('/addGig', methods=['POST'])
 @is_logged_in
-def add_gig_for_real():  # TODO: Addd gig
+def add_gig_for_real():
     title = request.form['title']
     location = request.form['location']
     date = request.form['date']
@@ -217,7 +214,7 @@ def add_gig_for_real():  # TODO: Addd gig
 
 @app.route('/addGig', methods=['GET'])
 @is_logged_in
-def add_gig():  # TODO: Add gig
+def add_gig():
     return render_template('addGig.html')
 
 
