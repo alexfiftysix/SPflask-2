@@ -1,0 +1,44 @@
+{# TODO: responsive design! Argh!#}
+{# Breakpoint: width 800px #}
+{# Breakpoint: height 550px #}
+
+<html>
+{% include 'head.html' %}
+
+<body id="body">
+{#<img class="bg" src="/static/images/blurry_black_red.jpg">#}
+<main>
+    {% if session.logged_in %}
+        <nav class="secret_nav">
+            <a href="/deleteVideo">Delete video</a>
+            <a href="/addVideo">Add video</a>
+            <a href="/deleteMusic">Delete music</a>
+            <a href="/addMusic">Add music</a>
+            <a href="/deleteGigs">Delete gig</a>
+            <a href="/addGig">Add gig</a>
+{#            <a href="/addUser">Add member</a>#}
+            <a href="/logout">Logout</a>
+        </nav>
+    {% endif %}
+
+    {% include 'includes/_messages.html' %}
+    {% block body %}
+    {% endblock %}
+
+
+
+    <!-- preload images here -->
+    <link rel="preload" href="/static/images/blurry_blue.jpg" as="image">
+</main>
+
+<nav>
+    <a href="/contact">Contact</a>
+    <a href="/video">Videos</a>
+    <a href="/music">Music</a>
+    <a href="/gigs">Gigs</a>
+</nav>
+
+
+<script src="/static/scripts.js" rel="script"></script>
+</body>
+</html>

@@ -3,12 +3,10 @@
 
 <body>
 <div class="mobile-main">
-
-
     <nav>
         <a href="#listen">Listen</a>
-        <a href="#music">Music</a>
         <a href="#video">Videos</a>
+        <a href="#music">Music</a>
         {% if gigs_num > 0 %}
             <a href="#gigs">Gigs</a>
         {% endif %}
@@ -29,24 +27,7 @@
 
 
     <div class="page">
-        <div class="ultrawide-title-wrapper top-element">
-            <p>S</p>
-            <p>T</p>
-            <p>R</p>
-            <p>E</p>
-            <p>E</p>
-            <p>T</p>
-        </div>
-        <div class="ultrawide-title-wrapper">
-            <p>P</p>
-            <p>I</p>
-            <p>E</p>
-            <p>C</p>
-            <p>E</p>
-            <p>S</p>
-        </div>
-
-
+        <h1 class="mobile-title">Street Pieces</h1>
         <a class="mobile-image-wrapper" href="https://streetpieces.bandcamp.com/album/everything-you-ever-wanted">
             <p>Out Now</p>
             <img class='mobile-image' src="/static/images/EYEW.jpg">
@@ -55,41 +36,9 @@
     </div>
 
 
-    <div class="page" id="listen">
+    <div class="page listen-page" id="listen">
         <h1 class="mobile-title">Listen</h1>
         {% include 'listen-options.html' %}
-    </div>
-
-    <div class="page music-page" id="music">
-        <div class="gallery-wrapper">
-            {% if music_count > 1 %}
-                <div class="arrow-box big-screen-arrow-box" onclick="changePlayer('l')">
-                    <img class="left-arrow arrow" src="../static/images/right_arrow.png">
-                </div>
-            {% endif %}
-
-            <div class="main-wrapper">
-                <h1 class="mobile-title">Music</h1>
-                <div id="music-wrapper">
-                    {% for player in music_data %}
-                        {{ player.iframe | safe }}
-                    {% endfor %}
-                </div>
-                {#    TODO: music arrows not working#}
-                <script src="/static/music.js" rel="script"></script>
-            </div>
-
-            {% if music_count > 1 %}
-                <div class="small-screen-arrows">
-                    <div class="arrow-box small-screen-arrow-box" onclick="changePlayer('l')">
-                        <img class="left-arrow arrow" src="../static/images/right_arrow.png">
-                    </div>
-                    <div class="arrow-box" onclick="changePlayer('r')">
-                        <img class="right-arrow arrow" src="../static/images/right_arrow.png">
-                    </div>
-                </div>
-            {% endif %}
-        </div>
     </div>
 
     <div class="page video-page" id="video">
@@ -124,6 +73,40 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="page music-page" id="music">
+        <div class="gallery-wrapper">
+            {% if music_count > 1 %}
+                <div class="arrow-box big-screen-arrow-box" onclick="changeMusicPlayer('l')">
+                    <img class="left-arrow arrow" src="../static/images/right_arrow.png">
+                </div>
+            {% endif %}
+
+            <div class="main-wrapper">
+                <h1 class="mobile-title">Music</h1>
+                <div id="music-wrapper">
+                    {% for player in music_data %}
+                        {{ player.iframe | safe }}
+                    {% endfor %}
+                </div>
+                {#    TODO: music arrows not working#}
+                <script src="/static/music.js" rel="script"></script>
+            </div>
+
+            {% if music_count > 1 %}
+                <div class="small-screen-arrows">
+                    <div class="arrow-box small-screen-arrow-box" onclick="changeMusicPlayer('l')">
+                        <img class="left-arrow arrow" src="../static/images/right_arrow.png">
+                    </div>
+                    <div class="arrow-box" onclick="changeMusicPlayer('r')">
+                        <img class="right-arrow arrow" src="../static/images/right_arrow.png">
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
 
     {% if gigs_num > 0 %}
         <div class="page" id="gigs">

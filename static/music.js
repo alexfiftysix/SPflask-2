@@ -1,7 +1,3 @@
-//TODO: Get BG images in
-image_path = "static/images/";
-bg_images = [image_path + "blurry_black_red.jpg", image_path + "blurry_blue.jpg"];
-bg_colours = ["5e5151", "544361"]; // average colour of bg image
 let current_player = 0;
 
 bandcamp_players = get_players();
@@ -15,7 +11,8 @@ function get_players() {
     return document.getElementById('music-wrapper').children;
 }
 
-function changePlayer(direction) {
+function changeMusicPlayer(direction) {
+
     //stop music playing
     let src = bandcamp_players[current_player].getAttribute('src');
     bandcamp_players[current_player].removeAttribute("src");
@@ -37,11 +34,6 @@ function changePlayer(direction) {
 
     //show next player
     bandcamp_players[current_player].classList.remove('hide');
-
-    // change bg
-    // if (data[current_player]['image']) {
-    //     document.getElementById('body').style.backgroundImage = 'url(' + data[current_player]['image'] + ')';
-    // }
 }
 
 /**
