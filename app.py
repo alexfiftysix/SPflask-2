@@ -63,8 +63,15 @@ def mobile():
 
     size = len(future_gigs_data) + len(past_gigs_data)
 
+    music_data = Music.query.all()
+    music_count = len(music_data)
+
+    video_data = Videos.query.all()
+    video_count = len(video_data)
+
     return render_template('mobile.html', mobile=True, gigs=future_gigs_data, old_gigs=past_gigs_data, gigs_num=size,
-                           contacts=contacts)
+                           contacts=contacts, music_count=music_count, music_data=music_data, video_data=video_data,
+                           video_count=video_count)
 
 
 @app.route('/listen')

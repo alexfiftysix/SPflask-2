@@ -1,7 +1,18 @@
 {% include 'head.html' %}
 
+
 <body>
 <div class="mobile-main">
+
+
+    <nav>
+        <a href="#listen">Listen</a>
+        <a href="#video">Videos</a>
+        <a href="#music">Music</a>
+        <a href="#gigs">Gigs</a>
+        <a href="#social">Social</a>
+    </nav>
+
 
     <div class="page">
         <div class="ultrawide-title-wrapper top-element">
@@ -30,19 +41,19 @@
     </div>
 
 
-    <div class="page">
+    <div class="page" id="listen">
         <h1 class="mobile-title">Listen</h1>
         {% include 'listen-options.html' %}
     </div>
 
     {% if gigs_num > 0 %}
-        <div class="page">
+        <div class="page" id="gigs">
             <h1 class="mobile-title">Gigs</h1>
             {% include 'gigs-list.html' %}
         </div>
     {% endif %}
 
-    <div class="page">
+    <div class="page" id="social">
         <h1 class="mobile-title">Follow</h1>
         <div class="social-names">
             <a href="https://www.facebook.com/streetpieces/">Facebook</a>
@@ -51,6 +62,21 @@
             <a href="https://streetpieces.bandcamp.com/">Bandcamp</a>
         </div>
     </div>
+
+    <div class="page music-page" id="music">
+        <h1 class="mobile-title">Music</h1>
+        {% with size=music_count, music_players=music_data %}
+            {% include "music_2.html" %}
+        {% endwith %}
+    </div>
+
+    <div class="page video-page" id="video">
+        <h1 class="mobile-title">Video</h1>
+        {% with size=video_count, videos=video_data %}
+            {% include "video_2.html" %}
+        {% endwith %}
+    </div>
+
 
     <div class="page last-page">
         <footer>
