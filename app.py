@@ -263,8 +263,4 @@ def page_not_found(e):
     return redirect('/')
 
 
-if __name__ == '__main__':
-    # TODO: Why this session_type business?
-    app.config['SESSION_TYPE'] = 'filesystem'
 
-    app.run(debug=True)
