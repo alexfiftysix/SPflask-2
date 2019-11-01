@@ -29,3 +29,8 @@ body {
 .video-page {
     display: none;
 }
+
+.pre-save {
+    width: 310px;
+    height: 400px;
+}
